@@ -62,7 +62,7 @@ def create_html_file(outputName,FileName,PDFPath,ImagePath):
         content = HTMLf.traitementContent(content)
 
         #Placement du contenu
-        f.write(content)
+        f.write(content +"<br>")
 
     #Fin de l'HTML
     f.write(HTML_BASE_END)
