@@ -36,9 +36,8 @@ def get_nb_page(path):
     reader = PdfReader(path)
     return len(reader.pages)
 
-def get_content(path):
+def get_content(path,page):
     """Renvoie le texte d'une page PDF"""
-    page = get_page(path)
     return page.extract_text()
 
 def replace_skipline(line):
@@ -115,7 +114,7 @@ def pdfToHtml(argv):
         for i,page in enumerate(pages): #Pour chaque page
             
             #Mise en place du contenu dans la page HTML
-            content = get_content(pdfPath)
+            content = get_content(pdfPath,page)
             content = traitementContent(content)
 
             create_image(page,ImagePath,i)
