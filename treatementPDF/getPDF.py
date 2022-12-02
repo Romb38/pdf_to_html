@@ -78,5 +78,5 @@ def fetchPDF(argv):
 def suppTempFile(FinalPath):
     fileTempPath = FinalPath + "/temp"
     rmtree(fileTempPath)
-    print("temp file successfully remove")
+    print("Success : temp file remove")
     return 0

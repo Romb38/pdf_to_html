@@ -15,5 +15,5 @@ def fichierOffline(filePATH,FinalPATH):
             print("Error - Le fichier n'a pas été trouvé")
             return 1
 
-    print("File correctly copied !")
+    print("Success : PDF file correctly copied into temp !")
     return FinalPATH + "/temp.pdf"
