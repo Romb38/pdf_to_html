@@ -8,14 +8,18 @@ import treatementPDF.getInfo as gtI
 import treatementPDF.pdfOnline as pdfOn
 import treatementPDF.pdfOffline as pdfOff
 import treatementPDF.traitement as t
+import KonamiCode.KonamiMain as kon
 
 def fetchPDF(argv):
     """Retourne le fichier pdf récuperée online/offline grâce aux arguements de la fonction"""
 
+    if "UpUpDownDownLeftRigthLeftRigthBA" in argv or "HautHautBasBasGaucheDroiteGaucheDroiteBA" in argv:
+        kon.main()
+
     pdf = None #Cette variable contiendra le fichier pdf récupéré en sortie
     FinalPATH = os.getcwd()
     typeFetch = 0 #On a bien les bons arguments dans la commande
-    FinalFileName = "pdfToHTML_Result.html" #Nom final du fichier html (valeur par défaut   )
+    FinalFileName = "pdfToHTML_Result.html" #Nom final du fichier html (valeur par défaut)
 
     if not('-o') in argv and not('-f') in argv and not('-h') in argv:
         print("Error - Indicate fetch file methode (-f/-o) - See README for more informations")
@@ -64,10 +68,12 @@ def fetchPDF(argv):
         print("Error - name 'temp' is already taken by a folder")
         return 1
 
+
     if typeFetch == 1 and type(FinalPATH)!= int and type(FinalFileName)!=int:
         pdf = pdfOff.fichierOffline(t.prepaFilePath(FilePath),tempFilePath)
     elif typeFetch == 2 and type(FinalPATH)!= int and type(FinalFileName)!=int:
         pdf = pdfOn.fichierOnline(tempFilePath,URL)
+
     
     if not(typeFetch) :
         print ("Error - Specify PDF file with -f or -o")

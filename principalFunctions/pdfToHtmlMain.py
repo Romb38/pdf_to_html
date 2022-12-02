@@ -22,10 +22,6 @@ On ajoute le tout sur le HTML
 """
 
 
-
-   
-
-
 def create_html_file(outputName,FileName,PDFPath,ImagePath):
     """Fonction de création du HTML, elle utilise tout les fonction présente au dessus"""
 
