@@ -44,3 +44,8 @@ import pdfToHtmlLib
     `Fuction for online file:`
 
     pdfToHtmlOnline(URL,FINALPATH = *<current file>*,name = *<file-name.PDF>*)
+
+**Rest toDo:**
+
+Format html file (all the element are in the html but in one colomun)
+
