@@ -111,7 +111,6 @@ def pdfToHtml(argv):
 
         
         pages = get_pages(pdfPath) #Liste des pages du documents PDF
-        print(pages)
 
         for i,page in enumerate(pages): #Pour chaque page
             
