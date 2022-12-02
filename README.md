@@ -1,7 +1,9 @@
 **General functioning:**
 
 This tool converts a PDF file to an HTML file
+
 **Internal functioning:**
+
 Creates temp file, generates HTML from it and makes it usable
 In case of KeyboardInterrupt, temp file will stay in the respository
 
