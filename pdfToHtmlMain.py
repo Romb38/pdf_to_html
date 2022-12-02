@@ -22,11 +22,6 @@ On ajoute le tout sur le HTML
 /!\ les images sont placés dans l'ordre au dessus de tout le texte /!\ 
 """
 
-def get_page(path):
-    """Renvoie la première page d'un PDF"""
-    reader = PdfReader(path)
-    return reader.pages[0]
-
 def get_pages(path):
     """Renvoie la première page d'un PDF"""
     reader = PdfReader(path)
@@ -51,7 +46,7 @@ def replace_url(line):
 def replace_namedurl(line):
     """Remplace les URLs du PDF par des hyperlien"""
     return re.sub("\[(.*) (.*)\]", "<a href='\\2'>\\1</a>", line)
-    
+
 def create_image(page,ImagePath,indexPage):
     """Crée les images venue du PDF dans le file /temp/images_tmp"""
     count=0
@@ -70,9 +65,13 @@ def traitementContent(content):
     content = replace_namedurl(content)
     return content
 
+def get_index(image):
+    i = 0
+    while image[i] != "_":
+        i += 1
+    return int(image[:i])
 
-
-def create_html_file(content,images,outputName,index,FileName):
+def create_html_file(outputName,FileName,PDFPath,ImagePath):
     """Fonction de création du HTML, elle utilise tout les fonction présente au dessus"""
 
     #Constante de bases (représente le début et la fin du doc html)
@@ -84,12 +83,28 @@ def create_html_file(content,images,outputName,index,FileName):
     NoAbsoluteImagePATH = "./images_tmp/" #PATH des images dans le html
     f.write(HTML_BASE_START)
 
-    #Placement des images
-    for image in images:
-        f.write("\n<img src='"+ NoAbsoluteImagePATH + image + "'/><br>")
+
+    pages = get_pages(PDFPath) #Liste des pages du documents PDF
+
+    for i,page in enumerate(pages): #Pour chaque page
+        
+        
+        #Création des fichier pour les images contenus sur la page
+        create_image(page,ImagePath,i)
+        images = get_imageName(ImagePath)
+
+        #Placement des images dans le html
+        for image in images:
+            if get_index(image) == i:
+                f.write("\n<img src='"+ NoAbsoluteImagePATH + image + "'/><br>")
     
-    #Placement du contenu
-    f.write(content)
+
+        #Récupération du contenu textuel du PDF
+        content = get_content(PDFPath,page)
+        content = traitementContent(content)
+
+        #Placement du contenu
+        f.write(content)
 
     #Fin de l'HTML
     f.write(HTML_BASE_END)
@@ -100,7 +115,7 @@ def pdfToHtml(argv):
 
     pdfInfo = gPDF.fetchPDF(argv) #récupère les infos du PDF (online/offline)
     if type(pdfInfo) != int:
-        pdfPath = pdfInfo[0] #PATH du pdf, existe forcément
+        PDFPath = pdfInfo[0] #PATH du pdf, existe forcément
         FinalPATH = pdfInfo[1] #PATH du fichier de sauvegarde (+ /temp pour obtenir les fichier de sauvegarde locale)
         FinalFileName = pdfInfo[2] #Nom du fichier HTML de sortie
         TempPath = FinalPATH + "/temp" #PATH vers le fichier temp
@@ -109,17 +124,8 @@ def pdfToHtml(argv):
         os.mkdir(ImagePath) #Création du fichier contenant les images
 
         
-        pages = get_pages(pdfPath) #Liste des pages du documents PDF
 
-        for i,page in enumerate(pages): #Pour chaque page
-            
-            #Mise en place du contenu dans la page HTML
-            content = get_content(pdfPath,page)
-            content = traitementContent(content)
-
-            create_image(page,ImagePath,i)
-            images = get_imageName(ImagePath)
-            create_html_file(content,images,TempPath+"/"+ FinalFileName,i,FinalFileName)
+        create_html_file(TempPath+"/"+ FinalFileName,FinalFileName,PDFPath,ImagePath)
         
         zip.createFile(FinalPATH,FinalFileName) #Crée l'archive finale
         gPDF.suppTempFile(FinalPATH) #Enleve les fichier temporaire créé durant l'algo

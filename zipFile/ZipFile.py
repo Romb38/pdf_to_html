@@ -21,5 +21,3 @@ def createFile(FinalPATH,FinalFileName):
 
     #Suppression fichier temporaire
     shutil.rmtree(FinalFile[:-1])
-
-    print("Success !")
