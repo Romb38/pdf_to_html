@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os
-import pdfToHtmlMain as pdfMain
+import principalFunctions.pdfToHtmlMain as pdfMain
 
 def pdfToHtmlFile(filePath,FINALPATH = os.getcwd(),name = ""):
     """Transform a pdf file into a html file"""

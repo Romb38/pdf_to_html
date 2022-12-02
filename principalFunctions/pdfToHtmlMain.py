@@ -2,11 +2,10 @@
 
 import treatementPDF.getPDF as gPDF
 import zipFile.ZipFile as zip
+import principalFunctions.infoSida as iS
 
-from PyPDF2 import PdfReader
-import re
 import os
-
+import principalFunctions.HtmlFunc as HTMLf
 
 #Fonction de création du HTML
 
@@ -22,54 +21,10 @@ On ajoute le tout sur le HTML
 /!\ les images sont placés dans l'ordre au dessus de tout le texte /!\ 
 """
 
-def get_pages(path):
-    """Renvoie la première page d'un PDF"""
-    reader = PdfReader(path)
-    return reader.pages
 
-def get_nb_page(path):
-    reader = PdfReader(path)
-    return len(reader.pages)
 
-def get_content(path,page):
-    """Renvoie le texte d'une page PDF"""
-    return page.extract_text()
-
-def replace_skipline(line):
-    """Renmplace les \n par des <br>"""
-    return re.sub('\n', "<br>", line)
-
-def replace_url(line):
-    """Modifie les URLS par des les balises HTML correspondante"""
-    return re.sub(r'((http|https|ftp)://[a-zA-Z0-9\./]+)', r'<a href="\1">\1</a>', line)
-
-def replace_namedurl(line):
-    """Remplace les URLs du PDF par des hyperlien"""
-    return re.sub("\[(.*) (.*)\]", "<a href='\\2'>\\1</a>", line)
-
-def create_image(page,ImagePath,indexPage):
-    """Crée les images venue du PDF dans le file /temp/images_tmp"""
-    count=0
-    for image_file_object in page.images:
-        with open(ImagePath + str(indexPage) + "_" + str(count) + image_file_object.name, "wb") as fp:
-            fp.write(image_file_object.data)
-            count += 1
-
-def get_imageName(ImagePath):
-    """Renvoie la liste des fichier présents dans PATH"""
-    return os.listdir(ImagePath) #path corresspond au fichier des images
    
-def traitementContent(content):
-    content = replace_skipline(content)
-    content = replace_url(content)
-    content = replace_namedurl(content)
-    return content
 
-def get_index(image):
-    i = 0
-    while image[i] != "_":
-        i += 1
-    return int(image[:i])
 
 def create_html_file(outputName,FileName,PDFPath,ImagePath):
     """Fonction de création du HTML, elle utilise tout les fonction présente au dessus"""
@@ -82,26 +37,29 @@ def create_html_file(outputName,FileName,PDFPath,ImagePath):
     f = open(outputName, "w", encoding="utf-8")
     NoAbsoluteImagePATH = "./images_tmp/" #PATH des images dans le html
     f.write(HTML_BASE_START)
+    f.write("\n<img src='"+ NoAbsoluteImagePATH + "-1_sidaInfo.png' width=10% heigth=10%/><br>Numero Sida Infos Service : 0 800 84 800<br>Site : <a href =https://www.sida-info-service.org>https://www.sida-info-service.org</a><br>Nuit de l'info 2022<br><br><br>===========PDF===========<br><br><br><br>")
 
 
-    pages = get_pages(PDFPath) #Liste des pages du documents PDF
+    pages = HTMLf.get_pages(PDFPath) #Liste des pages du documents PDF
 
     for i,page in enumerate(pages): #Pour chaque page
         
         
         #Création des fichier pour les images contenus sur la page
-        create_image(page,ImagePath,i)
-        images = get_imageName(ImagePath)
+        HTMLf.create_image(page,ImagePath,i)
+        images = HTMLf.get_imageName(ImagePath)
+
+
 
         #Placement des images dans le html
         for image in images:
-            if get_index(image) == i:
+            if HTMLf.get_index(image) == i:
                 f.write("\n<img src='"+ NoAbsoluteImagePATH + image + "'/><br>")
     
 
         #Récupération du contenu textuel du PDF
-        content = get_content(PDFPath,page)
-        content = traitementContent(content)
+        content = HTMLf.get_content(page)
+        content = HTMLf.traitementContent(content)
 
         #Placement du contenu
         f.write(content)
@@ -123,7 +81,7 @@ def pdfToHtml(argv):
         
         os.mkdir(ImagePath) #Création du fichier contenant les images
 
-        
+        iS.recuperationImageSidaInfoService(ImagePath)
 
         create_html_file(TempPath+"/"+ FinalFileName,FinalFileName,PDFPath,ImagePath)
         

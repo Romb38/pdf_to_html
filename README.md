@@ -10,11 +10,12 @@ In case of KeyboardInterrupt, temp file will stay in the respository
 **Libraries included:**
 
     `In the computer:`
-        -sys (force usage under windows)
+        - sys (force usage under windows)
         - os (same)
     
     `Open Source:`
-        -shutil (paste the file from a location to another)
+        - shutil (paste the file from a location to another)
+        - requests (requests on internet for pdf/png files)
 
 
 **Shell command :**

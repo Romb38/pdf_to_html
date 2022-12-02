@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import sys
-import pdfToHtmlMain as pdfMain
+import principalFunctions.pdfToHtmlMain as pdfMain
 
 
 if __name__ == "__main__":
