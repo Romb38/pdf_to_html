@@ -79,12 +79,19 @@ def pdfToHtml(argv):
         TempPath = FinalPATH + "/temp" #PATH vers le fichier temp
         ImagePath = TempPath + "/images_tmp/" #PATH vers le fichier des images
         
-        os.mkdir(ImagePath) #Création du fichier contenant les images
+        try :
+            os.mkdir(ImagePath) #Création du fichier contenant les images
+        except FileExistsError:
+            print("Error - name 'temp' is already taken by a folder")
+            return 1
 
         iS.recuperationImageSidaInfoService(ImagePath)
 
         create_html_file(TempPath+"/"+ FinalFileName,FinalFileName,PDFPath,ImagePath)
         
-        zip.createFile(FinalPATH,FinalFileName) #Crée l'archive finale
+        error = zip.createFile(FinalPATH,FinalFileName) #Crée l'archive finale
+        if error == 1:
+            return 1
+
         gPDF.suppTempFile(FinalPATH) #Enleve les fichier temporaire créé durant l'algo
     return 0

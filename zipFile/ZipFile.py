@@ -9,7 +9,11 @@ def createFile(FinalPATH,FinalFileName):
     FinalFile = FinalPATH + "/" + FinalFileName[:-5] + "/"
 
     #Création de l'archive
-    os.mkdir(FinalFile)
+    try :
+        os.mkdir(FinalFile)
+    except FileExistsError:
+        print("Error - name '"+ FinalFileName[:-5] +"' is already taken by a folder")
+        return 1
 
     #Copie des fichiers
     shutil.move(FinalPATH + "/temp/" + FinalFileName, FinalFile)

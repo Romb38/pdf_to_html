@@ -9,8 +9,6 @@ import treatementPDF.pdfOnline as pdfOn
 import treatementPDF.pdfOffline as pdfOff
 import treatementPDF.traitement as t
 
-
-
 def fetchPDF(argv):
     """Retourne le fichier pdf récuperée online/offline grâce aux arguements de la fonction"""
 
@@ -58,11 +56,13 @@ def fetchPDF(argv):
             print(RM.read())
             return -1
 
-    tempFilePath = FinalPATH + "/temp"
+    tempFilePath = FinalPATH + "/temp" #Chemin du fichier temporaire
+
     try :
         os.mkdir(tempFilePath)
     except FileExistsError:
-        pass
+        print("Error - name 'temp' is already taken by a folder")
+        return 1
 
     if typeFetch == 1 and type(FinalPATH)!= int and type(FinalFileName)!=int:
         pdf = pdfOff.fichierOffline(t.prepaFilePath(FilePath),tempFilePath)
